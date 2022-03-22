@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 use ReflectionException;
+use Config\Services;
 
 class Auth extends BaseController
 {
@@ -15,7 +16,8 @@ class Auth extends BaseController
      * @return Response
      * @throws ReflectionException
      */
-    public function register()
+
+    function register()
     {
         $rules = [
             'name' => 'required',
@@ -47,7 +49,7 @@ class Auth extends BaseController
      * Authenticate Existing User
      * @return Response
      */
-    public function login()
+    function login()
     {
         $rules = [
             'email' => 'required|min_length[6]|max_length[50]|valid_email',
@@ -60,8 +62,7 @@ class Auth extends BaseController
             ]
         ];
 
-$input = $this->getRequestInput($this->request);
-
+        $input = $this->getRequestInput($this->request);
 
         if (!$this->validateRequest($input, $rules, $errors)) {
             return $this
@@ -70,9 +71,32 @@ $input = $this->getRequestInput($this->request);
                     ResponseInterface::HTTP_BAD_REQUEST
                 );
         }
-       return $this->getJWTForUser($input['email']);
 
-       
+        return $this->getJWTForUser($input['email']);
+    }
+
+    function whoami()
+    {
+        try {
+
+            helper('jwt');
+            $res = getJWTFromRequest($this->request->getServer('HTTP_AUTHORIZATION'));
+            $res = validateJWTFromRequest($res);
+            return Services::response()->setJSON($res);
+
+        } catch (Exception $e) {
+
+            return Services::response()
+                ->setJSON(
+                    [
+                        'error' => $e->getMessage()
+                    ]
+                )
+                ->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED);
+
+        }
+
+
     }
 
     private function getJWTForUser(

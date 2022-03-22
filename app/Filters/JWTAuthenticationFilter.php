@@ -18,6 +18,7 @@ class JWTAuthenticationFilter implements FilterInterface
         $authenticationHeader = $request->getServer('HTTP_AUTHORIZATION');
 
         try {
+            
             helper('jwt');
             $encodedToken = getJWTFromRequest($authenticationHeader);
             validateJWTFromRequest($encodedToken);

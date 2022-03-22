@@ -2,9 +2,9 @@
 
 function tes()
 {
-    $env = (CI_ENVIRONMENT == 'production') ? 'none' : 'block';
+    $env = (getenv('CI_ENVIRONMENT') == 'production') ? 'none' : 'block';
 	$args = func_get_args();
-	if(is_for($args)){ foreach($args as $x){
+	if(is_array($args) && count($args)){ foreach($args as $x){
 		$echo = "<div style='display:$env'><pre>";
 		if(is_array($x) || is_object($x)){
 			$echo .= print_r($x, true);
@@ -18,9 +18,9 @@ function tes()
 
 function tesx()
 {
-	$env = (CI_ENVIRONMENT == 'production') ? 'none' : 'block';
+	$env = (getenv('CI_ENVIRONMENT') == 'production') ? 'none' : 'block';
 	$args = func_get_args();
-	if(is_for($args)){ foreach($args as $x){
+	if(is_array($args) && count($args)){ foreach($args as $x){
 		$echo = "<div style='display:$env'><pre>";
 		if(is_array($x) || is_object($x)){
 			$echo .= print_r($x, true);
