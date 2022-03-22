@@ -42,7 +42,7 @@ class UserModel extends Model
         return password_hash($plaintextPassword, PASSWORD_BCRYPT);
     }
                                       
-    public function findUserByEmailAddress(string $emailAddress)
+    function findUserByEmailAddress(string $emailAddress)
     {
         $user = $this
             ->asArray()
